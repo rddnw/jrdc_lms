@@ -110,7 +110,8 @@ const RSTATUS = ['Done', 'In progress', 'Pending', 'Failed'];
 /* Media: Drive / YouTube links */
 const safeUrl = u => /^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '';
 function driveId(url) { const s = String(url || ''); const m = s.match(/\/d\/([\w-]{20,})/) || s.match(/[?&]id=([\w-]{20,})/); return m ? m[1] : ''; }
-function imgSrc(url) { const id = driveId(url); return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1600` : safeUrl(url); }
+// Photos bundled with the app (img/…) are allowed as relative paths.
+function imgSrc(url) { const id = driveId(url); if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`; const s = String(url || '').trim(); return /^img\/[\w.-]+$/.test(s) ? s : safeUrl(s); }
 function cssUrl(u) { return String(u).replace(/["'()\\\s]/g, c => encodeURIComponent(c)); }
 function ytId(url) { const m = String(url || '').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/); return m ? m[1] : ''; }
 function embedHtml(url, doc) {
@@ -125,7 +126,7 @@ function embedHtml(url, doc) {
 }
 function shortName(name) {
   const w = String(name || '?').split(/\s+/), num = (String(name).match(/#\s*(\d+)\s*$/) || [])[1];
-  const base = /^[A-Z0-9-]{2,8}$/.test(w[0]) ? w[0] : w.filter(x => /^[A-Za-z0-9]/.test(x)).slice(0, 3).map(x => x[0]).join('').toUpperCase();
+  const base = /^[a-z]?[A-Z0-9-]{2,7}$/.test(w[0]) ? w[0].toUpperCase() : w.filter(x => /^[A-Za-z0-9]/.test(x)).slice(0, 3).map(x => x[0]).join('').toUpperCase();
   return base + (num ? ' ' + num : '');
 }
 function machineImg(m, withBadge) {
@@ -183,7 +184,7 @@ const machineOptions = (labFilter, sel, includeEmpty) => {
 /* ================= Branding ================= */
 function applyBrand(s) {
   if (!s) return;
-  const c = validColor(s.ThemeColor) || '#0b5d7a', root = document.documentElement.style;
+  const c = validColor(s.ThemeColor) || '#1f3c88', root = document.documentElement.style;
   root.setProperty('--brand', c);
   root.setProperty('--brand-2', shade(c, matchMedia('(prefers-color-scheme: dark)').matches ? 35 : 12));
   const tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.content = c;
@@ -231,11 +232,12 @@ function renderLogin() {
   $('#app').innerHTML = `<div class="login-wrap"><form class="login" onsubmit="doLogin(event)">
     <img class="logo" id="lLogo" src="${esc(s.Logo ? imgSrc(s.Logo) : 'logo.png')}" alt="" referrerpolicy="no-referrer">
     <h1 id="lName">${esc(s.InstituteName || 'JRDC')} Lab Management</h1>
-    <div class="sub" id="lSub">${esc(s.InstituteFull || 'Joint Research & Demonstration Center')}<br>${esc(s.Subtitle || 'Sri Lanka – China')}</div>
+    <div class="sub" id="lSub">${esc(s.InstituteFull || 'China–Sri Lanka Joint Research and Demonstration Centre for Water Technology')}<br>${esc(s.Subtitle || 'Meewathura, Peradeniya · Sri Lanka')}</div>
     <label class="f"><span>User ID</span><input id="lid" autocomplete="username" autocapitalize="characters" spellcheck="false" required></label>
     <label class="f"><span>PIN</span><input id="lpin" type="password" inputmode="numeric" autocomplete="current-password" required></label>
     <button class="btn primary block" id="lbtn">Log in</button>
     <div class="foot">Forgot your PIN? Ask a system admin.</div>
+    <div class="partners" aria-label="Partners"><img src="img/p-gosl.png" alt="Government of Sri Lanka"><img src="img/p-chinaaid.png" alt="China Aid"><img src="img/p-cas.png" alt="Chinese Academy of Sciences"><img src="img/p-uop.png" alt="University of Peradeniya"></div>
   </form></div>`;
   rawApi('getPublic', [], true).then(p => {
     store(K_PUB, p); applyBrand(p);

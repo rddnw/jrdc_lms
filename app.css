@@ -1,5 +1,5 @@
 :root{
-  --brand:#0b5d7a; --brand-2:#0e7aa0; --on-brand:#ffffff;
+  --brand:#1f3c88; --brand-2:#2a52b0; --on-brand:#ffffff;
   --bg:#f3f6f8; --card:#ffffff; --ink:#14212b; --ink2:#43525e; --muted:#6f7d88; --line:#dfe6eb; --surface:#f7f9fb;
   --ok:#16794a; --ok-bg:#e3f4ea; --warn:#9a6200; --warn-bg:#fdf1d8; --bad:#b42318; --bad-bg:#fde8e6;
   --info:#1d5fae; --info-bg:#e5effb; --gray-bg:#eceff2;
@@ -234,6 +234,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 /* ---------- Login ---------- */
 .login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
 .login{width:100%;max-width:400px;background:var(--card);border-radius:18px;padding:28px 24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.login .partners{display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;padding:10px;border-radius:12px;background:#fff}
+.login .partners img{height:44px;width:auto}
 .login .logo{width:72px;height:72px;border-radius:16px;object-fit:contain;display:block;margin:0 auto 10px;background:#fff}
 .login h1{text-align:center;font-size:22px;margin-bottom:0}
 .login .sub{text-align:center;color:var(--muted);font-size:13.5px;margin-bottom:20px}

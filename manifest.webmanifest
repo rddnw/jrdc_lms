@@ -1,13 +1,13 @@
 {
   "name": "JRDC Lab Management System",
   "short_name": "JRDC Labs",
-  "description": "Joint Research & Demonstration Center (Sri Lanka – China) laboratory management",
+  "description": "China–Sri Lanka Joint Research and Demonstration Centre for Water Technology – laboratory management",
   "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b5d7a",
-  "theme_color": "#0b5d7a",
+  "background_color": "#ffffff",
+  "theme_color": "#1f3c88",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
