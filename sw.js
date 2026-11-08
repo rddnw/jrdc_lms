@@ -1,6 +1,6 @@
 // JRDC LMS service worker: keeps the app on the device so it opens instantly.
 // Bump VERSION whenever you change any app file, so devices pick up the update.
-const VERSION = 'jrdc-lms-v2';
+const VERSION = 'jrdc-lms-v3';
 const SHELL = ['./', 'index.html', 'app.css', 'app.js', 'admin.js', 'config.js', 'logo.png', 'manifest.webmanifest',
                'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 

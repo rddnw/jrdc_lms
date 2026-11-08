@@ -120,7 +120,7 @@ function embedHtml(url, doc) {
   if (y) return `<div class="embed"><iframe src="https://www.youtube.com/embed/${y}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
   const d = driveId(url);
   if (d) return `<div class="embed ${doc ? 'doc' : ''}"><iframe src="https://drive.google.com/file/d/${d}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
-  if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) return `<div class="embed"><video src="${esc(url)}" controls preload="metadata"></video></div>`;
+  if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) return `<div class="embed" oncontextmenu="return false"><video src="${esc(url)}" controls controlslist="nodownload" disablepictureinpicture preload="metadata"></video></div>`;
   if (doc && /\.pdf(\?|$)/i.test(url)) return `<div class="embed doc"><iframe src="${esc(url)}"></iframe></div>`;
   return '';
 }
@@ -520,10 +520,10 @@ async function submitRecord(e, mid) {
 function mediaPanel(m, head) {
   const v = embedHtml(m.VideoURL, false), d = embedHtml(m.ManualURL, true);
   return `<div class="grid g2">
-    <div class="card"><div class="row between"><h3 style="margin:0">${ico('video')} Training video</h3>${linkBtn(m.VideoURL, 'Open', 'video')}</div><div style="margin-top:10px">
-      ${v || (m.VideoURL ? '<div class="note">Open the video with the button above.</div>' : `<div class="empty">No video yet.${head ? ' Add a YouTube or Drive link with "Edit machine".' : ''}</div>`)}</div></div>
-    <div class="card"><div class="row between"><h3 style="margin:0">${ico('file')} User manual</h3>${linkBtn(m.ManualURL, 'Open / download', 'download')}</div><div style="margin-top:10px">
-      ${d || (m.ManualURL ? '<div class="note">Open the manual with the button above.</div>' : `<div class="empty">No manual yet.${head ? ' Upload a PDF with "Edit machine".' : ''}</div>`)}</div></div></div>`;
+    <div class="card"><div class="row between"><h3 style="margin:0">${ico('video')} Training video</h3>${head ? linkBtn(m.VideoURL, 'Open', 'video') : ''}</div><div style="margin-top:10px">
+      ${v || (m.VideoURL ? `<div class="note">${head ? 'Open the video with the button above.' : 'This video cannot be shown here. Ask your lab head.'}</div>` : `<div class="empty">No video yet.${head ? ' Add a YouTube or Drive link with "Edit machine".' : ''}</div>`)}</div></div>
+    <div class="card"><div class="row between"><h3 style="margin:0">${ico('file')} User manual</h3>${head ? linkBtn(m.ManualURL, 'Open / download', 'download') : ''}</div><div style="margin-top:10px">
+      ${d || (m.ManualURL ? `<div class="note">${head ? 'Open the manual with the button above.' : 'This manual cannot be shown here. Ask your lab head.'}</div>` : `<div class="empty">No manual yet.${head ? ' Upload a PDF with "Edit machine".' : ''}</div>`)}</div></div></div>`;
 }
 function bookingForm(m) {
   return `<h3>Book this machine</h3><div class="fgrid">
@@ -568,7 +568,7 @@ function recordTable(rs, showMachine) {
 }
 function openRecord(i) {
   const r = S.recRows[i]; if (!r) return;
-  const canEdit = r.userId === S.user.id || headOf(r.labId), canDel = headOf(r.labId);
+  const canEdit = headOf(r.labId), canDel = headOf(r.labId);  // assistants add readings but cannot change them
   openModal(`<h2>Record – ${esc(r.sampleId)}</h2>
     <dl class="kv"><dt>Lab</dt><dd>${esc(r.lab)}</dd><dt>Machine</dt><dd>${esc(r.machine)}</dd><dt>Saved</dt><dd>${esc(r.ts)} by ${esc(r.user)}</dd>
     ${r.hours ? `<dt>Duration</dt><dd>${r.hours} h</dd>` : ''}</dl>
@@ -583,7 +583,7 @@ function openRecord(i) {
       <label class="f full"><span>Notes</span><input id="eNotes" value="${esc(r.notes)}"></label></div>`
     : `<dl class="kv"><dt>Test</dt><dd>${esc(r.test)}</dd><dt>Status</dt><dd>${badge(r.status)}</dd><dt>Start</dt><dd>${esc(dtText(r.start))}</dd><dt>End</dt><dd>${esc(dtText(r.end))}</dd>
        <dt>Parameters</dt><dd style="white-space:pre-wrap">${esc(r.params)}</dd><dt>Result</dt><dd style="white-space:pre-wrap">${esc(r.result)}</dd><dt>Notes</dt><dd>${esc(r.notes)}</dd></dl>
-       ${linkBtn(r.file, 'Result file')}`}
+       ${isHead() ? linkBtn(r.file, 'Result file') : (safeUrl(r.file) ? '<div class="hint">A result file is attached (lab head access).</div>' : '')}`}
     <div class="actions">${canDel ? `<button class="btn danger" onclick="delRecord(${js(r.id)})">Delete</button><span class="spacer"></span>` : ''}
       ${isHead() ? `<a class="btn" href="#/samples/${encodeURIComponent(r.sampleId)}">${ico('search')} Sample journey</a>` : ''}
       <button class="btn" onclick="closeModal()">Close</button>${canEdit ? `<button class="btn primary" onclick="saveRecordEdit(${js(r.id)})">Save changes</button>` : ''}</div>`);
