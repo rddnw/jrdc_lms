@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JRDC Lab Management</title>
+<meta name="description" content="JRDC (Joint Research & Demonstration Center, Sri Lanka – China) laboratory management system">
+<meta name="theme-color" content="#0b5d7a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JRDC Labs">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="app.css">
+<script src="config.js"></script>
+</head>
+<body>
+<div id="loader"></div>
+<div id="shell" class="hidden">
+  <header class="top">
+    <a class="brand" href="#/home">
+      <img id="hLogo" src="logo.png" alt="">
+      <div><div class="t1" id="hName">JRDC</div><div class="t2" id="hSub">Lab Management System</div></div>
+    </a>
+    <button class="topbtn" id="bell" title="Notifications" onclick="openNotifications()"></button>
+    <button class="who" id="who" onclick="openUserMenu()"></button>
+  </header>
+  <nav id="nav"></nav>
+</div>
+<main id="app"><div class="empty">Loading…</div></main>
+<div id="toast"></div>
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()"><div class="modal-box" id="modalBody"></div></div>
+<datalist id="sampleList"></datalist>
+<script src="app.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
